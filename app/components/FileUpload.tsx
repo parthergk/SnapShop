@@ -47,7 +47,7 @@ const FileUpload = ({ onSuccess, onProgress, fileType }: FileUploadProps) => {
     try {
       const authRes = await fetch("/api/upload-auth");
       const auth = await authRes.json();
-
+            
       const uploadResponse = await upload({
         file,
         fileName: file.name,
@@ -84,6 +84,7 @@ const FileUpload = ({ onSuccess, onProgress, fileType }: FileUploadProps) => {
   return (
     <>
       <input
+      className=" bg-gray-600"
         type="file"
         accept={fileType === "image" ? "image/*" : "video/*"}
         onChange={handleUpload}

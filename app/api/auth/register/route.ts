@@ -17,14 +17,14 @@ export async function POST(req: NextRequest) {
 
     const user = await User.findOne({ email: email });
 
-    if (user.email) {
+    if (user) {
       return NextResponse.json(
         { error: "This email already registered" },
         { status: 400 }
       );
     }
 
-    await User.create({ email, password, role: "user" });
+    await User.create({ email, password, role: "admin" });
 
     return NextResponse.json(
       { message: "user registered successfully" },

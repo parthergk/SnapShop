@@ -26,8 +26,9 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-
-    if (!session || session.user.role !== "admin") {
+    console.log("sessions", session);
+    
+    if (!session) {
       return NextResponse.json(
         { error: "Unauthorized access" },
         { status: 401 }
@@ -36,9 +37,9 @@ export async function POST(req: NextRequest) {
 
     await connectToDataBase();
     const body: IProduct = await req.json();
-
+    
     const { name, imageUrl, description, imgvariant } = body;
-
+    
     if (!name || !imageUrl || !description || !imgvariant || imgvariant.length === 0) {
       return NextResponse.json(
         { error: "Missing required product fields" },
