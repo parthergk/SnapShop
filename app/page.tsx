@@ -1,23 +1,30 @@
-"use client"
-import { apiClient } from "@/lib/api-client";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import ImageGallery from "./components/ImageGallery";
 import { IProduct } from "@/models/Product";
-import { useEffect, useState } from "react";
+import { apiClient } from "@/lib/api-client";
 
 export default function Home() {
-  const [product, setProduct] = useState<IProduct[]>([]);
-  console.log("products", product);
-  
+  const [products, setProducts] = useState<IProduct[]>([]);
+
   useEffect(() => {
-    getProducts();
+    const fetchProducts = async () => {
+      try {
+        const {products} = await apiClient.getProducts();
+        setProducts(products);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
-  async function getProducts() {
-    try {
-      const res = await apiClient.getProducts();
-      setProduct(res);
-    } catch (error) {
-      console.log("Error fetching the products", error); 
-    }
-  }
-  return <div>Home</div>;
+  return (
+    <main className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8">ImageKit Shop</h1>
+      <ImageGallery products={products} />
+    </main>
+  );
 }

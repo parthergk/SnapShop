@@ -42,7 +42,6 @@ const orderSchema = new Schema<IOrder>(
     },
     razorpayPaymentId: {
       type: String,
-      required: true,
     },
     amount: {
       type: Number,
