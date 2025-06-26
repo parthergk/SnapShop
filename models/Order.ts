@@ -2,6 +2,7 @@ import mongoose, { Schema, model, models } from "mongoose";
 import { IImageVariant, ImageVariantType } from "./Product";
 
 export interface IOrder {
+  _id?: string;
   userId: mongoose.Types.ObjectId;
   productId: mongoose.Types.ObjectId;
   variant: IImageVariant;

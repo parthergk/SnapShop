@@ -6,32 +6,50 @@ import nodemailer from "nodemailer";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body = await req.text();
+    
+      // const parsed = JSON.parse(body);
+      
+      // if (parsed) {
+      //   console.log('✅ Body is valid JSON');
+      //   console.log('📝 Parsed event type:', parsed.event);
+      // }else{
+      //   console.log('❌ Body is not valid JSON:');
+      // }
+
     const signature = req.headers.get("x-razorpay-signature");
 
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET!)
-      .update(body)
+      .update(body, 'utf8')
       .digest("hex");
 
+      console.log("expected", expectedSignature);
+      console.log("signature", signature);
+      
     if (expectedSignature !== signature) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 403 });
     }
 
     const event = JSON.parse(body);
     await connectToDataBase();
-    
+
     if (event.event === "payment.captured") {
+      
       const payment = event.payload.payment.entity;
 
       const order = await Order.findOneAndUpdate({
+        razorpayOrderId: payment.order_id,
+        status: "pending"
+      },{
         razorpayPaymentId: payment.id,
         status: "completed",
       }).populate([
         { path: "productId", select: "name" },
-        { path: "userId", select: "emial" },
+        { path: "userId", select: "email" },
       ]);
-
+      console.log("order", order);
+      
       if (order) {
         const transporter = nodemailer.createTransport({
           host: "sandbox.smtp.mailtrap.io",

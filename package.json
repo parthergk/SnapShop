@@ -20,6 +20,7 @@
     "next": "15.3.3",
     "next-auth": "^4.24.11",
     "nodemailer": "^6.10.1",
+    "raw-body": "^3.0.0",
     "razorpay": "^2.9.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

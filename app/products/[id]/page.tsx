@@ -35,7 +35,7 @@ export default function ProductPage() {
       }
 
       try {
-        const {product} = await apiClient.getProduct(id.toString());
+        const { product } = await apiClient.getProduct(id.toString());
         setProduct(product);
       } catch (err) {
         console.error("Error fetching product:", err);
@@ -78,7 +78,7 @@ export default function ProductPage() {
         name: "ImageKit Shop",
         description: `${product.name} - ${variant.type} Version`,
         order_id: orderId,
-        handler: function () {
+        handler: async function (response: any) {
           console.log("Payment successful!", "success");
           router.push("/orders");
         },
